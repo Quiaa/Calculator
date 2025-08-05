@@ -7,72 +7,51 @@ import com.example.test.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val calculator: Calculation = Calculator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.addButton.setOnClickListener {
-            performOperation("add")
+            performOperation(Operation.Add)
         }
-
         binding.subtractButton.setOnClickListener {
-            performOperation("subtract")
+            performOperation(Operation.Subtract)
         }
-
         binding.multiplyButton.setOnClickListener {
-            performOperation("multiply")
+            performOperation(Operation.Multiply)
         }
-
         binding.divideButton.setOnClickListener {
-            performOperation("divide")
+            performOperation(Operation.Divide)
         }
     }
-    private fun performOperation(operation: String) {
-        // Get the text from the EditText fields.
+
+    private fun performOperation(operation: Operation) {
         val number1Str = binding.number1Input.text.toString()
         val number2Str = binding.number2Input.text.toString()
 
-        // Validate that input fields are not empty.
         if (number1Str.isEmpty() || number2Str.isEmpty()) {
             binding.resultTextView.text = "Result: Please enter both numbers!"
             return
         }
-
-        // Try to convert the input strings to Double.
-        // toDoubleOrNull returns null if the conversion fails.
         val number1 = number1Str.toDoubleOrNull()
         val number2 = number2Str.toDoubleOrNull()
 
-        // Check if the conversion was successful.
         if (number1 == null || number2 == null) {
             binding.resultTextView.text = "Result: Invalid number format!"
             return
         }
+        val result = calculator.calculate(number1, number2, operation)
 
-        // Perform the calculation based on the operation parameter.
-        val result = when (operation) {
-            "add" -> number1 + number2
-            "subtract" -> number1 - number2
-            "multiply" -> number1 * number2
-            "divide" -> {
-                // Handle division by zero.
-                if (number2 == 0.0) {
-                    Toast.makeText(this, "Cannot divide by zero!", Toast.LENGTH_LONG).show()
-                    null // Return null to indicate an error
-                } else {
-                    number1 / number2
-                }
-            }
-            else -> null // Should not happen
-        }
-
-        // Display the result if the calculation was successful.
-        if (result != null) {
-            binding.resultTextView.text = "Result: $result"
+        // Handle the Result to update the UI.
+        result.onSuccess { calculatedValue ->
+            // This block runs only if the calculation was successful.
+            binding.resultTextView.text = "Result: $calculatedValue"
+        }.onFailure { error ->
+            // This block runs only if the calculation failed.
+            binding.resultTextView.text = "Error: ${error.message}"
         }
     }
-
 }
