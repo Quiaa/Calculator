@@ -1,7 +1,6 @@
 package com.example.test
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.test.databinding.ActivityMainBinding
 
@@ -45,12 +44,11 @@ class MainActivity : AppCompatActivity() {
         }
         val result = calculator.calculate(number1, number2, operation)
 
-        // Handle the Result to update the UI.
         result.onSuccess { calculatedValue ->
-            // This block runs only if the calculation was successful.
-            binding.resultTextView.text = "Result: $calculatedValue"
+            // --- NEW: DECIMAL FORMATTING ---
+            val formattedResult = String.format("%.3f", calculatedValue)
+            binding.resultTextView.text = "Result: $formattedResult"
         }.onFailure { error ->
-            // This block runs only if the calculation failed.
             binding.resultTextView.text = "Error: ${error.message}"
         }
     }

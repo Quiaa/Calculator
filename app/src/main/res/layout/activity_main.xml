@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:hint="First Number"
-        android:inputType="numberDecimal" />
+        android:inputType="numberSigned|numberDecimal" />
 
     <EditText
         android:id="@+id/number2_input"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:hint="Second Number"
-        android:inputType="numberDecimal" />
+        android:inputType="numberSigned|numberDecimal" />
 
     <LinearLayout
         android:layout_width="wrap_content"
